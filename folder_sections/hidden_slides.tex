@@ -1,0 +1,36 @@
+
+\begin{frame}[label=app1]{ECS properties}
+    \hyperlink{ecs-first}{\beamergotobutton{Jump to ECS slide}}
+\end{frame}
+
+\begin{frame}[label=weight-ecc]{}
+    \small
+\begin{algorithm}[H]
+    \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+    \SetKwInOut{Parameters}{parameters}
+    \Input{$partList$: the list of disjoint partitions \\ $weights$: the weight array that contains the number of duplicates}
+    \Output{the Element-Centric Consistency of the list}
+
+    $nPartitions \gets \text{size}(partList)$; \\
+    $nTotalPartitions \gets \text{sum}(weights)$; \tcp*{includes duplicates}
+    $ecc \gets \textbf{0}$; \\
+    % \tcp{Calculate the ECS between different partitions}
+    \For{i = 1 \KwTo nPartitions - 1}{
+        \For{j = i + 1 \KwTo nPartitions}{
+            $ecc \gets ecc + \text{ecs}(partList[i],partList[j]) * weights[i] * weights[j];$
+        }
+    }
+    
+    % \tcp{Calculate the ECS between duplicates}
+    $nDuplicatesECS \gets 0$; \\
+    \For{i = 1 \KwTo nPartitions}{$nDuplicatesECS \gets nDuplicatesECS + weights[i] * (weights[i] - 1) / 2;$}
+    $ecc \gets ecc + nDuplicatesECS * \textbf{1};$ \\
+    % \tcp{Normalize the score in the range [0, 1]}
+    $ecc \gets ecc / (nTotalPartitions * (nTotalPartitions - 1) / 2);$ \\
+    \Return{ecc}
+
+\end{algorithm}
+
+\hyperlink{wecc}{\beamergotobutton{Jump to Weighted ECC slide}}
+
+\end{frame}

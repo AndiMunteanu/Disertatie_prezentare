@@ -1,0 +1,80 @@
+\documentclass[aspectratio=169, xcolor=table]{beamer}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage{ragged2e}
+\usepackage{appendixnumberbeamer}
+\usepackage{algorithm2e}
+\usepackage{natbib}
+% \usepackage{apalike}
+% \usepackage[table]{xcolor}
+
+\usepackage[utf8]{inputenc}
+\setbeamerfont{caption}{size=\tiny}
+\usetheme{CambridgeUS}
+\usecolortheme{spruce}
+% includes
+
+\title[ClustAssess]{Methods for assessing clustering
+stability \\ in single-cell expression
+datasets\cite{clustassess}}
+\author[Andi Munteanu]{Andi Munteanu \inst{1} \\ \bigskip \textbf{Supervisors} \\
+    Dr. Liviu Ciortuz \inst{1} \\
+    Dr. Irina Mohorianu \inst{2}
+}
+\institute[] {
+    \inst{1} Faculty of Computer Science, Alexandru Ioan Cuza University, Iași \\
+    \inst{2} Wellcome-MRC Cambridge Stem Cell Institute, University of Cambridge
+}
+\date{June 2022}
+
+\AtBeginSection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+\justifying
+%%%%%%%%%%% FIRST SLIDE %%%%%%%%%%%%%
+\maketitle
+
+%%%%%%%%%%% OUTLINE %%%%%%%%%%%%%%%%%
+\begin{frame}
+    \frametitle{Outline}
+    \tableofcontents
+\end{frame}
+
+%%%%%%%%%%
+
+    \section{Introduction}
+\begin{frame}
+    asdfda
+\end{frame}
+
+\input{folder_sections/alignment.tex}
+\input{folder_sections/clustassess.tex}
+\input{folder_sections/results.tex}
+\input{folder_sections/acknowledgements.tex}
+% limiations and future work
+\begin{frame}[allowframebreaks]{References}
+\bibliographystyle{unsrt}
+\bibliography{bibliography}
+\end{frame}
+\appendix
+\input{folder_sections/hidden_slides.tex}
+
+\end{document}
+

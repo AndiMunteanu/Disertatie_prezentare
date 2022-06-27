@@ -1,0 +1,176 @@
+\section{ClustAssess package}
+
+\subsection{ECS optimization}
+
+\begin{frame}[label=ecs-first]{What is ECS?}
+    \begin{itemize}[<+->]
+        \item An \textit{affinity matrix} of a partition describe the co-occurrences of different elements by calculating the number of different paths between them.
+        \item  For a disjoint partition, the affinity matrix can be calculated using the formula: \begin{equation*} \label{eq:affinity-disjoin}
+                  p_{ij} =
+                  \begin{cases}
+                      0, \text{if } i \text{ and } j \text{ don't belong to the same cluster}                  \\
+                      \frac{\alpha}{|C_\beta|}, \text{if }i\text{ and } j \text{ belong to the cluster } \beta \\
+                      1 - \alpha + \frac{\alpha}{|C_\beta|}, \text{if } i = j
+                  \end{cases}
+              \end{equation*}
+        \item Element-Centric Similarity (ECS) \cite{Gates2019} is a clustering comparison score measured using the L1 distance between the affinity matrices: $ \displaystyle S_i (\mathcal{A}, \mathcal{B}) = 1 - \frac{1}{2 \alpha} \sum_{j = 1}^N |p_{ij}^{\mathcal{A}} - p_{ij}^{\mathcal{B}}|$
+    \end{itemize}
+
+    \hyperlink{app1}{\beamerbutton{ECS properties}}
+
+\end{frame}
+
+\begin{frame}{Optimising the calculation of the ECS score for disjoint partitions}
+    \begin{itemize}
+        \item For disjoint partitions, the ECS has the same value for points from the same clusters.
+        \item The number of ECS calculations drops from $N \times N$ to $n \times m$.
+        \item This optimization removes the affinity matrix dependency and should be both time and memory efficient.
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Element-Centric Consistency}
+    \begin{itemize}
+        \item Gates et al. also proposed Element-Centric Consistency (or ECC; also named  \textit{frustration}) score, used when a list of multiple partitions is provided.
+        \item The ECC score is calculated as the average of the sum of the ECS between every unique pair of partitions from the list:
+              \begin{equation*}
+                  \frac{2}{T(T-1)} \sum_{j=1}^T \sum_{k=1}^{j-1} S_i (\mathcal{R}_k, \mathcal{R}_j)
+              \end{equation*}
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}[label=wecc]{Weighted ECC}
+    \begin{itemize}
+        \item If there are multiple occurrences of the same partition, determining the ECC will require rendundant calculation of the ECS of the same pairs.
+        \item To prevent this, we propose a weighted version of ECC, where each unique partition has attached a weight that denotes the number of duplicates.
+    \end{itemize}
+    \hyperlink{weight-ecc}{\beamerbutton{Weighted ECC pseudocode}}
+\end{frame}
+
+\begin{frame}{Merging identical partitions}
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            \justifying
+
+            The weights are calculated by performing an automatic merge of identical partitions.
+            \bigskip
+
+            To determine if two partitions are identical, we use their contingency table.
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{images/ch2/2_cont_table.png}
+                \caption{\justifying \textbf{Contingency table}. The rows are associated with the clusters from one partition, and the columns with the clusters from the other partitions. }
+            \end{figure}
+        \end{column}
+    \end{columns}
+    
+\end{frame}
+\begin{frame}{Almost identical partitions - ECS threshold}
+    There can be cases where the difference between two partitions is negligible, as it can be seen in the picture below.
+    To allow the merge of almost identical partitions, we introduced the \textit{ECS threhshold}: the value of this parameter acts as a lower bound and determines whether the partitions should be considered extremely similar and mergeable or not.
+    \begin{figure}
+        \centering
+        \begin{subfigure}[t]{0.47\textwidth}
+            \includegraphics[width=\textwidth]{images/ch2/2_almost_s.png}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.47\textwidth}
+            \includegraphics[width=\textwidth]{images/ch2/2_almost_m.png}
+        \end{subfigure}
+        \caption{\textbf{Two almost identical partitions} Each panel represents the distribution of a partition on a low-dimensional (UMAP) topology.}
+    \end{figure}
+\end{frame}
+
+\subsection{Stability pipeline}
+
+\begin{frame}
+    \begin{itemize}
+        \item Random seed is a factor that affects the clustering output.
+        \item We developed a stability pipeline that performs a visual assessment of the robustness of a parameter configuration at the change of seed.
+        \item The robustness will be determined by running the clustering pipeline multiple times with different random seeds. The Element-Centric Consistency of the obtained list of partitions will be an indicator of stability.
+        \item The stability pipeline follows the steps presented in the PhenoGraph algorithm.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Feature stability}
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            \justifying
+
+            The feature set has an important role in obtaining the low-dimensional topology.
+            \bigskip
+
+
+            We can assess the stability of different feature sets with varying sizes.
+            \bigskip
+
+
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{images/ch3/3_feat_incremental.png}
+                \caption{\justifying \textbf{Incremental feature stability}. Each colour represents a different feature set. The size of the set is displayed above each boxplot. Each boxplot represents the consistency of the partitions. }
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Inference of minimum number of clusters}
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            \justifying
+
+            The number of nearest neighbours affect the graph connectivity.
+            \bigskip
+
+
+            The number of connected components decreases as the number of nearest neighbours increases.
+            \bigskip
+
+            The number of connected components acts as a lower bound for the possible number of clusters.
+
+
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{images/ch3/3_conn_comp.png}
+                \caption{\justifying \textbf{Graph connectivity evolution}. Each colour represents a different reduced space used for graph building. The X-axis represents the number of nearest neighbours used. The Y-axis represents the number of connected components. }
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}{Resolution - number of clusters stability}
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            \justifying
+
+            For graph clustering methods, the resolution parameter controls the number of clusters.
+            \bigskip
+
+
+            The stability can be assessed on different parameter configurations.
+            \bigskip
+
+            The colour gradient describes the statistical reliability of the assessment.
+
+
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{images/ch3/3_1_kres_ecc.png}
+                \caption{\justifying \textbf{Resolution - number of cluster stability}. Each shape of point indicate a different parameter configuration. The point size indicates the stability of the resolution - number of clusters pair. The colour gradient illustrates the frequency of the number of clusters.}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
