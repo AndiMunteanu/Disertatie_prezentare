@@ -1,7 +1,7 @@
 \section{Factors that lead to divergent results}
 
 \begin{frame}{PhenoGraph pipeline}
-    PhenoGraph is a pipeline proposed by Levine et al. \cite{Levine2015} that applies graph clustering on "normal" datasets.
+    PhenoGraph: pipeline proposed by Levine et al. \cite{Levine2015} that applies graph clustering on \\ gene-expression datasets.
 
     \bigskip
 
@@ -15,14 +15,13 @@
 \end{frame}
 
 \begin{frame}{Divergent results}
-    We compared the results of two R packages, Seurat \cite{Hao2021} and Monocle \cite{Cao2019}, that implement the PhenoGraph pipeline to process single-cell data.
+    We compared the partitions inferred by two frequently used R packages, Seurat \cite{Hao2021} and Monocle \cite{Cao2019}, that implement the PhenoGraph pipeline to process single-cell data.
 
     \begin{figure}[H]
     \centering
     \includegraphics[width=7cm]{images/ch2/2_S1.png}
     \includegraphics[width=7cm]{images/ch2/2_M1.png}
-    \caption{\textbf{Results obtained on default results} Clustering distribution with default parameters for Monocle (right) and Seurat
-(left). The title indicates the default random seed that is used.}
+    \caption{\textbf{Partitions obtained on default values of the parameters} Clustering with Monocle (right) and Seurat (left). The title indicates the default random seed that was used.}
 \end{figure}
 \end{frame}
 
@@ -45,7 +44,7 @@
                 \textbf{resolution}         & \cellcolor[HTML]{72B980}Graph clustering & 1e-4                      & 0.8                       \\ \hline
                 \textbf{\#iterations}       & \cellcolor[HTML]{72B980}Graph clustering & 2                         & 10                        \\ \hline
             \end{tabular}}
-            \caption{\textbf{Parameters used for aligning the results of the two packages}}
+            \caption{\textbf{Parameters used for aligning the results of Monocle and Seurat}}
         \end{table}
     
 

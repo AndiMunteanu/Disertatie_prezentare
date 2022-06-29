@@ -4,10 +4,10 @@
 
 \begin{frame}
     \begin{itemize}[<+->]
-        \item To provide an appropriate benchmark of the \texttt{ClustAssess} package, we will compare its performance to \texttt{Clusim}. 
+        \item To benchmark the performance of the \texttt{ClustAssess} package, we compare it to \texttt{Clusim}. 
         \item \texttt{Clusim} is a Python package that contains the official implementation from the authors of the ECS paper \cite{Gates2019b}.
-        \item In \texttt{Clusim}, the ECS between two disjoint partitions is determined by calculating the affinity matrices.
-        \item The benchmark is done by performing the ECS between two fixed partitions using the implementations from \texttt{ClustAssess} and \texttt{Clusim}. The size of the partitions varies from 50 to 90 000. The execution is repeated 30 times.
+        \item In \texttt{Clusim}, the ECS between two disjoint partitions is determined based on the affinity matrices.
+        \item The benchmark relies on the ECS between two fixed partitions using the implementations from \texttt{ClustAssess} and \texttt{Clusim}. The size of the partitions varies from 50 to 90 000. The number of clusters is set to 20 for both partitions. The assessment is repeated 30 times.
     \end{itemize}
 \end{frame}
 
@@ -63,12 +63,12 @@
 
 \begin{frame}{Performance with varying number of clusters}
     \begin{itemize}
-    \item \texttt{ClustAssess} calculates a number of unique ECS values proportional to the number of clusters of both partitions.
+    \item The time complexity for calculating the ECS in \texttt{ClustAssess} is $O(nm)$, where $n$ and $m$ represent the number of clusters of both partitions.
         
 
-    \item It is expected that, as the number of clusters increases, the \texttt{ClustAssess} package will require more time and space to calculate the ECS.
+    \item As the number of clusters increases, the \texttt{ClustAssess} package will require more time and space to calculate the ECS.
 
-    \item \texttt{Clusim} calculates the whole affinity matrix, so its performance shouldn't be affected by the number of clusters.
+    \item \texttt{Clusim} calculates the whole affinity matrix, so its performance is not influenced by the number of clusters.
 
     \end{itemize}
 \end{frame}
@@ -90,10 +90,10 @@
 
 \begin{frame}{How the stability pipeline will be benchmarked}
     \begin{itemize}[<+->]
-        \item We will evaluate the performance of the five independent components that provide the data for the plots: \texttt{feature\_stability}, \texttt{nn\_n\_conn\_comps}, \texttt{nn\_importance}, \texttt{clustering\_importance}, \texttt{resolution\_importance}.
-        \item The stability pipeline will be evaluated on the Mende data \cite{Mende2022} with subsamples ranging from 1000 to 13000 cells.
-        \item The pipeline allows support for parallelisation, so we will measure the pipeline's performance by varying the number of cores.
-        \item We will also evaluate the impact of using different ECS threshold values: 1, 0.99 and 0.95.
+        \item We evaluated the performance of the five independent components: \texttt{feature\_stability}, \texttt{nn\_n\_conn\_comps}, \texttt{nn\_importance}, \texttt{clustering\_importance}, \texttt{resolution\_importance}.
+        \item The stability pipeline was evaluated on the \textit{Mende et al} data \cite{Mende2022} with subsamples ranging from 1000 to 13000 cells.
+        \item The pipeline allows support for parallelisation, i.e. we measured the pipeline's performance by varying the number of cores.
+        \item We also evaluated the impact of using different ECS threshold values: 1, 0.99 and 0.95.
     \end{itemize}
 \end{frame}
 
@@ -103,6 +103,6 @@
                 % \makebox[\textwidth][c]{
                 \includegraphics[width=0.8\textwidth]{images/ch4/4_pipeline.png}
                 % }
-                \caption{\justifying \textbf{Stability pipeline runtime benchmark} The column designate a different component involved in the pipeline. The rows indicate different ECS threshold values. On the X-axis we represent different number of cores. The Y-axis contains the time required (in minutes) for the execution. The colour indicates the size of the dataset.} %We observe no performance gain when ECS threshold is lowered. \texttt{nn\_n\_conn\_comps} has the best scaling when increasing the dataset, followed by \texttt{resolution\_importance}. Adding more cores generally brings a performance boost, with some exceptions related to the overhead created by either the small size of the dataset or the ratio between the number of runs and the number of cores. }
+                \caption{\justifying \textbf{Stability pipeline runtime benchmark} The columns correspond to different components of the pipeline. The rows indicate different ECS threshold values. On the X-axis we represent different number of cores. The Y-axis contains the runtime (in minutes). The colour indicates the size of the dataset.} %We observe no performance gain when ECS threshold is lowered. \texttt{nn\_n\_conn\_comps} has the best scaling when increasing the dataset, followed by \texttt{resolution\_importance}. Adding more cores generally brings a performance boost, with some exceptions related to the overhead created by either the small size of the dataset or the ratio between the number of runs and the number of cores. }
             \end{figure}
 \end{frame}

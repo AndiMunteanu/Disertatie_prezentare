@@ -1,7 +1,133 @@
 
 \begin{frame}[label=app1]{ECS properties}
+ECS has multiple properties:
+\begin{itemize}
+    \item it has no bias towards randomized membership, cluster size or number of clusters
+    \item ECS can be calculated for disjoint, overlapping and hierarchical partitions
+    \item compared to most metrics, ECS provides a similarity score for each element; this allows both global and local assessment of the similarity.
+\end{itemize}
     \hyperlink{ecs-first}{\beamergotobutton{Jump to ECS slide}}
 \end{frame}
+
+\begin{frame}[label=proof]{Proof for ECS optimization}
+    
+\begin{remark} \label{remark:ecs-constant}
+    $\displaystyle\mathcal{S}_i(\mathcal{A}, \mathcal{B}) = 1-\frac{1}{2}\left(|C_a^\mathcal{A} \cap C_b^\mathcal{B}|\cdot \left|\frac{1}{c_a} - \frac{1}{c_b}\right| + |C_a^\mathcal{A} \cap (\mathcal{P} \setminus C_b^{\mathcal{B}})| \cdot \frac{1}{c_a} + |(\mathcal{P} \setminus C_a^\mathcal{A}) \cap C_b^\mathcal{B}|\cdot \frac{1}{c_b} \right)$, for any $i \in C_a^\mathcal{A} \cap C_b^\mathcal{B}$.
+\end{remark}
+
+\begin{block}{Proof}
+   In order to calculate the Element-Centric Similarity between partitions $\mathcal{A}$ and $\mathcal{B}$ in the point $i$, we must use the simplified formula for defining the affinity matrix.
+
+   To define $p_{ij}^{\mathcal{A}}$ and $p_{ij}^{\mathcal{B}}$, we must explore all four cases of labeling the point $j$. 
+\end{block}
+    \hyperlink{optslide}{\beamergotobutton{Back to Optimization slide}}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Proof (Cont)}
+    
+   \textbf{Case 1:} $j \in C_a^{\mathcal{A}} \cap C_b^{\mathcal{B}}$ ($j$ belongs to the same cluster as $i$ in both partitions.)
+
+   Using simplified formula, we have $\displaystyle
+    \begin{cases}
+        p_{ij}^\mathcal{A} &= \frac{\alpha}{c_a} \\
+        p_{ij}^\mathcal{B} &= \frac{\alpha}{c_b} 
+    \end{cases}$. Therefore, 
+    \[ p_{ij}^\mathcal{A} - p_{ij}^\mathcal{B} = \alpha \left(\frac{1}{c_a} - \frac{1}{c_b}\right) .\]
+%
+    This equation also holds when $j = i$.
+    \end{block}
+    \hyperlink{optslide}{\beamergotobutton{Back to Optimization slide}}
+    \end{frame}
+
+\begin{frame}
+    
+    \begin{block}{Proof (Cont)}
+  \textbf{Case 2:} $j \in C_a^\mathcal{A} \cap (\mathcal{P} \setminus C_b^{\mathcal{B}})$ ($j$ belongs to the same cluster as $i$ only in the first partition.)
+%
+ Using simplified formula, we have $\displaystyle
+  \begin{cases}
+      p_{ij}^\mathcal{A} &= \frac{\alpha}{c_a} \\
+      p_{ij}^\mathcal{B} &= 0
+  \end{cases}$. Therefore, 
+  \[ p_{ij}^\mathcal{A} - p_{ij}^\mathcal{B} = \alpha \frac{1}{c_a} .\]
+  \end{block}
+    \hyperlink{optslide}{\beamergotobutton{Back to Optimization slide}}
+  \end{frame}
+  
+\begin{frame}
+  \begin{block}{Proof (Cont)}
+%
+  \textbf{Case 3:} $j \in (\mathcal{P} \setminus C_a^\mathcal{A}) \cap  C_b^{\mathcal{B}}$ ($j$ belongs to the same cluster as $i$ only in the second partition.)
+%
+ Using simplified formula, we have $\displaystyle
+  \begin{cases}
+      p_{ij}^\mathcal{A} &= 0 \\
+      p_{ij}^\mathcal{B} &=\frac{\alpha}{c_b}
+  \end{cases}$. Therefore, 
+  \[ p_{ij}^\mathcal{A} - p_{ij}^\mathcal{B} = \alpha \frac{1}{c_b} .\]
+  \end{block}
+    \hyperlink{optslide}{\beamergotobutton{Back to Optimization slide}}
+\end{frame}
+  
+  
+\begin{frame}
+  \begin{block}{Proof (Cont)}
+%
+%
+  \textbf{Case 4:} $j \in (\mathcal{P} \setminus C_a^\mathcal{A}) \cap  (\mathcal{P} \setminus C_b^{\mathcal{B}})$ ($j$ belongs to a different cluster than $i$ both partitions.)
+%
+ Using simplified formula, we have $\displaystyle
+  \begin{cases}
+      p_{ij}^\mathcal{A} &= 0 \\
+      p_{ij}^\mathcal{B} &=0
+  \end{cases}$. Therefore, 
+  \[ p_{ij}^\mathcal{A} - p_{ij}^\mathcal{B} = 0 .\]
+  \end{block}
+  
+    \hyperlink{optslide}{\beamergotobutton{Back to Optimization slide}}
+  \end{frame}
+%
+%
+
+\begin{frame}
+  \begin{block}{Proof (Cont)}
+%
+  These four cases are exhaustive so $\displaystyle \sum_{j = 1}^N |p_{ij}^{\mathcal{A}} - p_{ij}^{\mathcal{B}} |$ will be equivalent to % according to \ref{eq:def-ecs}, $\mathcal{S}_i(\mathcal{A}, \mathcal{B})$ will be:
+%
+  \[
+      \begin{aligned}
+          &\sum_{j \in C_a^{\mathcal{A}} \cap C_b^{\mathcal{B}}} |p_{ij}^{\mathcal{A}} - p_{ij}^{\mathcal{B}} | + \sum_{j \in C_a^\mathcal{A} \cap (\mathcal{P} \setminus C_b^{\mathcal{B}})} |p_{ij}^{\mathcal{A}} - p_{ij}^{\mathcal{B}} | + \sum_{j \in (\mathcal{P} \setminus C_a^\mathcal{A}) \cap  C_b^{\mathcal{B}}} |p_{ij}^{\mathcal{A}} - p_{ij}^{\mathcal{B}} | + \sum_{j \in (\mathcal{P} \setminus C_a^\mathcal{A}) \cap  (\mathcal{P} \setminus C_b^{\mathcal{B}})} |p_{ij}^{\mathcal{A}} - p_{ij}^{\mathcal{B}} | = \\
+          %
+          = &\sum_{j \in C_a^{\mathcal{A}} \cap C_b^{\mathcal{B}}} \left|\alpha\left(\frac{1}{c_a} - \frac{1}{c_b}\right)\right| + \sum_{j \in C_a^\mathcal{A} \cap (\mathcal{P} \setminus C_b^{\mathcal{B}})} \left|\alpha\frac{1}{c_a}\right| + \sum_{j \in (\mathcal{P} \setminus C_a^\mathcal{A}) \cap  C_b^{\mathcal{B}}} \left|\alpha\frac{1}{c_b}\right| + \sum_{j \in (\mathcal{P} \setminus C_a^\mathcal{A}) \cap  (\mathcal{P} \setminus C_b^{\mathcal{B}}} |0 | = \\
+          %
+          = &\alpha\sum_{j \in C_a^{\mathcal{A}} \cap C_b^{\mathcal{B}}} \left|\frac{1}{c_a} - \frac{1}{c_b}\right| + \alpha\sum_{j \in C_a^\mathcal{A} \cap (\mathcal{P} \setminus C_b^{\mathcal{B}})} \left|\frac{1}{c_a}\right| + \alpha\sum_{j \in (\mathcal{P} \setminus C_a^\mathcal{A}) \cap  C_b^{\mathcal{B}}} \left|\frac{1}{c_b}\right| = \\
+          %
+          = &\alpha\left( |C_a^\mathcal{A} \cap C_b^\mathcal{B}|\cdot \left|\frac{1}{c_a} - \frac{1}{c_b}\right| + |C_a^\mathcal{A} \cap (\mathcal{P} \setminus C_b^{\mathcal{B}})| \cdot \frac{1}{c_a} + |(\mathcal{P} \setminus C_a^\mathcal{A}) \cap C_b^\mathcal{B}|\cdot \frac{1}{c_b} \right)
+      \end{aligned}     
+  \]
+  \end{block}
+  
+    \hyperlink{optslide}{\beamergotobutton{Back to Optimization slide}}
+  \end{frame}
+\begin{frame}
+  \begin{block}{Proof (Cont)}
+    Replacing this result in the ECS formula will lead to
+    \[
+    \begin{aligned}
+        S_i (\mathcal{A}, \mathcal{B}) &= 1 - \frac{1}{2 \alpha} \sum_{j = 1}^N |p_{ij}^{\mathcal{A}} - p_{ij}^{\mathcal{B}} |  \\
+        &= 1 - \frac{1}{2\alpha}\alpha\left( |C_a^\mathcal{A} \cap C_b^\mathcal{B}|\cdot \left|\frac{1}{c_a} - \frac{1}{c_b}\right| + |C_a^\mathcal{A} \cap (\mathcal{P} \setminus C_b^{\mathcal{B}})| \cdot \frac{1}{c_a} + |(\mathcal{P} \setminus C_a^\mathcal{A}) \cap C_b^\mathcal{B}|\cdot \frac{1}{c_b} \right) \\
+        &= 1 - \frac{1}{2}\left( |C_a^\mathcal{A} \cap C_b^\mathcal{B}|\cdot \left|\frac{1}{c_a} - \frac{1}{c_b}\right| + |C_a^\mathcal{A} \cap (\mathcal{P} \setminus C_b^{\mathcal{B}})| \cdot \frac{1}{c_a} + |(\mathcal{P} \setminus C_a^\mathcal{A}) \cap C_b^\mathcal{B}|\cdot \frac{1}{c_b} \right)
+    \end{aligned} ,
+    \]
+    which is the desired output.
+
+    \qedsymbol
+    \end{block}
+    
+    \hyperlink{optslide}{\beamergotobutton{Back to Optimization slide}}
+    \end{frame}
+
 
 \begin{frame}[label=weight-ecc]{}
     \small

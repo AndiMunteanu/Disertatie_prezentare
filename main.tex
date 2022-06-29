@@ -19,7 +19,7 @@
 
 \title[ClustAssess]{Methods for assessing clustering
 stability \\ in single-cell expression
-datasets\cite{clustassess}}
+datasets \cite{clustassess}}
 \author[Andi Munteanu]{Andi Munteanu \inst{1} \\ \bigskip \textbf{Supervisors} \\
     Dr. Liviu Ciortuz \inst{1} \\
     Dr. Irina Mohorianu \inst{2}
@@ -45,6 +45,7 @@ datasets\cite{clustassess}}
     \tableofcontents[currentsubsection]
   \end{frame}
 }
+\newtheorem{remark}{Remark}
 
 \begin{document}
 \justifying
@@ -58,20 +59,21 @@ datasets\cite{clustassess}}
 \end{frame}
 
 %%%%%%%%%%
-
-    \section{Introduction}
-\begin{frame}
-    asdfda
-\end{frame}
-
+\input{folder_sections/intro.tex}
 \input{folder_sections/alignment.tex}
 \input{folder_sections/clustassess.tex}
 \input{folder_sections/results.tex}
+\input{folder_sections/conclusions}
+\input{folder_sections/futurework}
 \input{folder_sections/acknowledgements.tex}
 % limiations and future work
 \begin{frame}[allowframebreaks]{References}
 \bibliographystyle{unsrt}
 \bibliography{bibliography}
+\end{frame}
+
+\begin{frame}
+    
 \end{frame}
 \appendix
 \input{folder_sections/hidden_slides.tex}
